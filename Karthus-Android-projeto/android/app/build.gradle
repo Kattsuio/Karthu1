@@ -1,0 +1,22 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+android {
+    namespace 'app.karthus'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'app.karthus'
+        minSdk 28
+        targetSdk 34
+        versionCode 640
+        versionName '6.4.0'
+        ndk { abiFilters 'arm64-v8a' }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    kotlinOptions { jvmTarget = '17' }
+    packaging {
+        // os programas nativos (libkarthus.so e libllama-server.so) precisam ser extraídos para poderem ser executados
+        jniLibs { useLegacyPackaging = true; keepDebugSymbols.add('**/*.so') }
+    }
+}

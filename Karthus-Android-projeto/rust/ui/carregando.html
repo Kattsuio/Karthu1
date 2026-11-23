@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Karthus</title>
+<style>
+:root{--bg:#0d0d0d;--fg:#f2f2f2;--fg2:#a3a3a3;--line:#383838;--bg3:#2a2a2a;--acc:#fff;--red:#fff;--ok:#1f9d6b;--warn:#e08a00}
+
+*{box-sizing:border-box}body{margin:0;height:100vh;background:var(--bg);color:var(--fg);font:15px/1.5 "Segoe UI",system-ui,sans-serif;display:flex;align-items:center;justify-content:center}
+main{width:min(560px,92vw);display:flex;flex-direction:column;gap:18px}
+.logo{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:650;margin-bottom:6px}
+.logo svg{width:44px;height:44px;animation:quebra 5s ease-in-out infinite}@keyframes quebra{0%,100%{transform:rotate(0) scale(1)}45%{transform:rotate(24deg) scale(1.06)}55%{transform:rotate(-4deg) scale(.97)}}.moldura-propria main{margin-top:48px}html,body{background:var(--bg)}@keyframes gira{to{transform:rotate(360deg)}}
+main>*{animation:sobe .5s cubic-bezier(.2,.8,.2,1) both}@keyframes sobe{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.p{animation:sobe .35s both}.estavel .p{animation:none}.gi{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:gira .8s linear infinite}.fino i{transition:width .25s}body{transition:opacity .35s}body.saindo{opacity:0}
+.barra i{background-image:linear-gradient(90deg,transparent,rgba(0,0,0,.25),transparent);background-size:200% 100%;animation:br 1.2s linear infinite}@keyframes br{from{background-position:200% 0}to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.linha{display:flex;align-items:center;gap:14px}
+.barra{flex:1;height:10px;border-radius:8px;background:var(--bg3);overflow:hidden}
+.barra i{display:block;height:100%;width:0;background:var(--acc);border-radius:8px;transition:width .2s ease}
+#pct{width:48px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+#rotulo{color:var(--fg2);min-height:22px;font-size:14px}
+#probs{display:flex;flex-direction:column;gap:10px}
+.p{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px}
+.bola{width:22px;height:22px;border-radius:50%;background:var(--red);color:#0d0d0d;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex:none;font-size:13px}
+.p.opc .bola{background:var(--warn)}
+.p div{flex:1;min-width:0}.p small{display:block;color:var(--fg2)}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:7px 14px;font-weight:600}
+.bp{background:var(--acc);color:#0d0d0d}.bs{background:var(--bg3);color:var(--fg)}
+.acoes{display:flex;gap:10px;flex-wrap:wrap}
+.fino{height:4px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-top:8px}.fino i{display:block;height:100%;background:var(--acc);width:0}
+.bp .gi{border-color:rgba(0,0,0,.3);border-top-color:#0d0d0d}.tb-bt button{background:transparent;border-radius:0;padding:0;font-weight:400}:root{--hov:#2a2a2a;--bg2:#0d0d0d}</style></head><body><main>
+<div class="logo"><svg class="ico" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#ffffff" stroke-linecap="butt" stroke-linejoin="miter"><path d="M50.1 45.0 L58.0 45.8" stroke-width="7"/><path d="M58.0 45.8 L59.3 57.0" stroke-width="7"/><path d="M59.3 57.0 L47.8 63.9" stroke-width="7"/><path d="M44.8 65.8 L28.9 56.6" stroke-width="4"/><path d="M31.8 54.8 L35.4 36.5" stroke-width="7"/><path d="M35.4 36.5 L58.4 28.7" stroke-width="7"/><path d="M58.4 28.7 L78.5 42.8" stroke-width="7"/><path d="M75.9 44.8 L65.1 81.9" stroke-width="4"/><path d="M67.7 79.9 L32.9 81.8" stroke-width="7"/><path d="M32.9 81.8 L14.5 53.5" stroke-width="7"/><path d="M11.9 55.3 L25.2 16.3" stroke-width="4"/><path d="M27.8 14.5 L73.0 14.6" stroke-width="7"/><path d="M35.4 36.5 L51.4 22.5" stroke-width="1.6" opacity=".8"/><path d="M67.7 79.9 L55.7 94.9" stroke-width="1.6" opacity=".8"/><path d="M50.0 50.0 L64.0 38.0" stroke-width="1.6" opacity=".8"/></svg>Karthus</div>
+<div class="linha"><div class="barra"><i id="barra"></i></div><div id="pct">0%</div></div>
+<div id="rotulo">Iniciando…</div>
+<div id="probs"></div>
+<div class="acoes" id="acoes"></div>
+</main>
+<script>
+const H={'X-Hirelod':'1','Content-Type':'application/json'};
+let indo=false,primeiro=true,t0=Date.now();
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function api(m,u){try{const r=await fetch(u,{method:m,headers:H,body:m==='GET'?undefined:'{}'});return await r.json()}catch(e){return null}}
+function mostrar(c){
+  const it=c.itens||[];
+  const inst=it.find(i=>i.estado==='instalando');
+  const pct=inst?inst.pct:c.pct||0;
+  document.getElementById('barra').style.width=pct+'%';
+  document.getElementById('pct').textContent=Math.round(pct)+'%';
+  const n=it.filter(i=>i.estado!=='espera').length;
+  let r=c.concluido?'Tudo conferido':(c.atual?('Carregando: '+c.atual+(n?' ('+Math.min(n,it.length)+' de '+it.length+')':'')):'Iniciando…');
+  if(inst)r='Instalando: '+inst.nome+(inst.msg?' — '+inst.msg:'');
+  else{const v=it.find(i=>i.estado==='verificando'&&i.msg);if(v&&!c.concluido)r+=' — '+v.msg}
+  document.getElementById('rotulo').textContent=r;
+  const ruins=it.filter(i=>i.estado==='falta'||i.estado==='erro'||i.estado==='instalando');
+  const P=document.getElementById('probs');
+  // só redesenha a lista quando ela realmente muda (antes era refeita a cada 150 ms e piscava)
+  const chave=JSON.stringify(ruins.map(i=>[i.id,i.estado,i.instalavel,i.critico]));
+  if(chave!==P.dataset.k){
+    P.dataset.k=chave;P.classList.toggle('estavel',!!P.dataset.ja);P.dataset.ja='1';
+    P.innerHTML=ruins.map(i=>{const ins=i.estado==='instalando';return '<div class="p'+(i.critico?'':' opc')+'" data-id="'+i.id+'"><span class="bola">'+(ins?'<span class="gi"></span>':'!')+'</span><div><b>'+esc(i.nome)+'</b><small class="m">'+esc(i.msg)+'</small>'+(ins?'':'<small>'+esc(i.dica)+'</small>')+(ins?'<div class="fino"><i></i></div>':'')+'</div>'+(i.instalavel&&!ins?'<button class="bp" data-i="'+i.id+'">Instalar</button>':'')+'</div>'}).join('');
+    P.querySelectorAll('button[data-i]').forEach(b=>b.onclick=async()=>{b.disabled=true;b.textContent='Instalando…';await api('POST','/api/instalar/'+b.dataset.i)});
+  }
+  // texto e barra são atualizados no lugar, sem refazer a lista (era isso que piscava)
+  ruins.forEach(i=>{const m=P.querySelector('.p[data-id="'+i.id+'"] .m');if(m&&m.textContent!==(i.msg||''))m.textContent=i.msg||''});
+  ruins.filter(i=>i.estado==='instalando').forEach(i=>{const f=P.querySelector('.p[data-id="'+i.id+'"] .fino i');if(f)f.style.width=Math.max(3,i.pct||0)+'%'});
+  const A=document.getElementById('acoes');
+  if(c.concluido&&!inst){
+    if(c.criticos_com_problema>0){A.innerHTML='<button class="bp" id="rv">Verificar de novo</button><button class="bs" id="cm">Continuar mesmo assim</button>';
+      document.getElementById('rv').onclick=async()=>{indo=false;await api('POST','/api/carga/verificar')};
+      document.getElementById('cm').onclick=()=>{document.body.classList.add('saindo');setTimeout(()=>location.replace('/'),300)}}
+    else if(ruins.length){if(!indo){indo=true;document.body.classList.add('saindo');setTimeout(()=>location.replace('/'),250)}}
+    else if(!indo){indo=true;{document.body.classList.add('saindo');setTimeout(()=>location.replace('/'),380)}}
+  }else if(!c.concluido&&c.atual&&c.atual.indexOf('memória')>=0){
+    A.innerHTML='<button class="bs" id="pl">Pular espera</button>';document.getElementById('pl').onclick=()=>api('POST','/api/carga/pular')}
+  else A.innerHTML='';
+}
+async function laco(){
+  for(;;){
+    let c=await fetch('/api/carga').then(r=>r.json()).catch(()=>null);
+    if(c)mostrar(c);
+    await new Promise(r=>setTimeout(r,150));
+  }
+}
+laco();
+</script><script src="/barra.js"></script></body></html>

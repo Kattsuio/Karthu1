@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="claro" data-acento="branco"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Karthus</title>
+<link rel="stylesheet" href="/app.css"></head><body>
+<div id="app">
+  <aside id="lado">
+    <div class="lado-topo"><span class="marca">Karthus</span><span><button class="bt" id="buscaBt" title="Pesquisar conversas"></button><button class="bt" id="fecharLado" title="Recolher barra"></button></span></div>
+    <div class="nav">
+      <button class="item on" id="novoBt"></button>
+      <button class="item" id="imagensBt"></button>
+      <button class="item" id="configBt"></button>
+    </div>
+    <div class="sec">Recentes</div>
+    <div id="lista"></div>
+    <div class="lado-base"><button class="perfil" id="perfilBt"></button></div>
+  </aside>
+  <main id="principal">
+    <div class="topo">
+      <button class="bt" id="abrirLado" title="Abrir barra" style="display:none"></button>
+      <button id="modeloBt"><span id="modeloNome">Modelo</span></button>
+      <div class="esp"></div>
+      <button id="dlBt" title="Downloads e instalações"></button>
+      <button id="saudeBt" title="Há algo para instalar ou corrigir">!</button>
+    </div>
+    <div id="chat"></div>
+    <div id="compor">
+      <div class="caixa">
+        <div id="anexos"></div>
+        <div class="linha">
+          <button class="rb" id="maisBt" title="Adicionar"></button>
+          <textarea id="texto" rows="1" placeholder="Pergunte ao Karthus"></textarea>
+          <button class="pill" id="pensarBt" title="Deixa a IA raciocinar antes de responder (mais lento)"></button>
+          <button class="pill" id="webBt" title="Deixa a IA pesquisar na internet antes de responder"></button>
+          <button class="pill" id="fluxoBt" title="Modo fluxo: vários modelos trabalham juntos (bem mais lento)"></button>
+          <button class="rb" id="micBt" title="Ditar com a voz"></button>
+          <button class="rb" id="envBt" title="Enviar"></button>
+        </div>
+      </div>
+      <div class="dica">O Karthus roda no seu computador. Confira informações importantes.</div>
+    </div>
+  </main>
+</div>
+<div id="solte">Solte aqui os arquivos, imagens ou atualizações .karthus</div>
+<div id="aviso"></div>
+<input type="file" id="arq" multiple hidden>
+<input type="file" id="arqUpd" accept=".karthus,.hirelod,.zip" hidden>
+<script src="/app.js"></script>
+<script src="/downloads.js"></script>
+<script src="/barra.js"></script>
+<script src="/criacoes.js"></script>
+</body></html>
